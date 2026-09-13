@@ -1,0 +1,14 @@
+{
+  "appId": "com.novacut.studio.videoeditor",
+  "appName": "NovaCut Studio",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  }
+}

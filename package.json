@@ -1,0 +1,27 @@
+{
+  "name": "novaa-studioapp",
+  "version": "1.0.0",
+  "description": "NovaCut Studio - Cross-Platform Pro Video Editor for Web, Desktop and Android Play Store",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "build:android": "./scripts/build-android.sh",
+    "open:android": "npx cap open android",
+    "sync:android": "npx cap sync android"
+  },
+  "keywords": [
+    "video-editor",
+    "capcut-alternative",
+    "android",
+    "playstore",
+    "capacitor",
+    "cross-platform"
+  ],
+  "author": "NovaCut Studio",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4"
+  }
+}

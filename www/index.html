@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NovaCut Studio - Cross-Platform Pro Video Editor</title>
+  <meta name="description" content="A powerful cross-platform video editing studio with multi-track timeline, filters, audio mixing, text overlays, and fast rendering.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0b10">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="brand-section">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <div class="logo-badge">NovaCut</div>
+        <input type="text" class="project-title-input" id="projectTitle" value="My Epic Reel" title="Edit project name">
+      </div>
+
+      <div class="header-center">
+        <!-- Aspect Ratio Selector -->
+        <div class="aspect-ratio-selector">
+          <span>Ratio:</span>
+          <button class="aspect-btn active" data-ratio="16:9" id="ratio-16-9">16:9</button>
+          <button class="aspect-btn" data-ratio="9:16" id="ratio-9-16">9:16 Reel</button>
+          <button class="aspect-btn" data-ratio="1:1" id="ratio-1-1">1:1</button>
+          <button class="aspect-btn" data-ratio="4:5" id="ratio-4-5">4:5</button>
+          <button class="aspect-btn" data-ratio="21:9" id="ratio-21-9">21:9</button>
+        </div>
+
+        <!-- Desktop vs Mobile Preview Toggle -->
+        <div class="device-toggle-pill">
+          <button class="device-btn active" data-device="desktop" id="viewDesktopBtn">🖥 Desktop</button>
+          <button class="device-btn" data-device="mobile" id="viewMobileBtn">📱 Mobile</button>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-primary" id="openExportBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Export Video
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace-main">
+      <!-- Left Sidebar: Media, Audio, Text, Filters, Stickers -->
+      <aside class="left-sidebar">
+        <nav class="sidebar-tabs">
+          <button class="sidebar-tab-btn active" data-tab="media" id="tabBtnMedia">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+            Media
+          </button>
+          <button class="sidebar-tab-btn" data-tab="audio" id="tabBtnAudio">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+            Audio
+          </button>
+          <button class="sidebar-tab-btn" data-tab="text" id="tabBtnText">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+            Text
+          </button>
+          <button class="sidebar-tab-btn" data-tab="filters" id="tabBtnFilters">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20z"></path></svg>
+            Filters
+          </button>
+          <button class="sidebar-tab-btn" data-tab="stickers" id="tabBtnStickers">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+            Stickers
+          </button>
+        </nav>
+
+        <div class="sidebar-content">
+          <!-- Tab: Media -->
+          <div class="tab-pane active" id="tab-media">
+            <div class="section-header">
+              <span>Import Footage</span>
+            </div>
+            <div class="upload-dropzone" id="uploadDropzone">
+              <input type="file" id="mediaFileInput" multiple accept="video/*,audio/*,image/*" style="display: none;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <div>
+                <strong style="display:block; font-size: 0.9rem; margin-bottom: 2px;">Drop files or click to upload</strong>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">MP4, WebM, MOV, MP3, PNG, JPG</span>
+              </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 10px;">
+              <span>Stock & Project Media</span>
+            </div>
+            <div class="media-grid" id="mediaBinGrid">
+              <!-- Dynamically Populated Cards -->
+            </div>
+          </div>
+
+          <!-- Tab: Audio -->
+          <div class="tab-pane" id="tab-audio">
+            <div class="section-header">
+              <span>Voiceover & Sound</span>
+            </div>
+            <button class="tool-btn" id="recordVoiceBtn" style="width: 100%; justify-content: center; padding: 10px; font-weight: 600;">
+              🎤 Record Voiceover
+            </button>
+
+            <div class="section-header" style="margin-top: 12px;">
+              <span>Royalty-Free Beats</span>
+            </div>
+            <div id="audioBinList" style="display: flex; flex-direction: column; gap: 8px;">
+              <!-- Dynamically Populated Audio -->
+            </div>
+          </div>
+
+          <!-- Tab: Text -->
+          <div class="tab-pane" id="tab-text">
+            <div class="section-header">
+              <span>Text Styles & Captions</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="text-preset-card" onclick="window.novaCutApp.timeline.addClip('track-text-1', { text: '⚡ DYNAMIC TITLE', type: 'text', animation: 'pop', color: '#ffffff', bgColor: 'rgba(139, 92, 246, 0.8)' })">
+                <span style="font-weight: 700; color: var(--accent-primary);">⚡ Neon Pop Title</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">+ Add</span>
+              </div>
+              <div class="text-preset-card" onclick="window.novaCutApp.timeline.addClip('track-text-1', { text: 'Subtitles & Auto Caption', type: 'text', fontSize: 44, animation: 'fade', color: '#facc15', strokeWidth: 4 })">
+                <span style="font-weight: 600; color: var(--accent-amber);">📝 Yellow Subtitle</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">+ Add</span>
+              </div>
+              <div class="text-preset-card" onclick="window.novaCutApp.timeline.addClip('track-text-1', { text: 'LOWER THIRD TAG', type: 'text', fontSize: 36, animation: 'slide', color: '#06b6d4', bgColor: '#0f172a' })">
+                <span style="font-weight: 600; color: var(--accent-secondary);">🏷 Lower Third Bar</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">+ Add</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: Filters -->
+          <div class="tab-pane" id="tab-filters">
+            <div class="section-header">
+              <span>Cinematic LUTs & Styles</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+              <div class="filter-card active" data-filter="none">
+                <div style="background: #222; width: 100%; height: 70px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">Original</div>
+                <div class="filter-label">Standard</div>
+              </div>
+              <div class="filter-card" data-filter="cinematic">
+                <div style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); width: 100%; height: 70px;"></div>
+                <div class="filter-label">Cinematic</div>
+              </div>
+              <div class="filter-card" data-filter="cyberpunk">
+                <div style="background: linear-gradient(135deg, #ff007f, #06b6d4); width: 100%; height: 70px;"></div>
+                <div class="filter-label">Cyberpunk</div>
+              </div>
+              <div class="filter-card" data-filter="vintage">
+                <div style="background: linear-gradient(135deg, #704214, #d4a373); width: 100%; height: 70px;"></div>
+                <div class="filter-label">Vintage Retro</div>
+              </div>
+              <div class="filter-card" data-filter="bw">
+                <div style="background: linear-gradient(135deg, #111, #888); width: 100%; height: 70px;"></div>
+                <div class="filter-label">B & W Film</div>
+              </div>
+              <div class="filter-card" data-filter="glitch">
+                <div style="background: linear-gradient(90deg, #ff0055 33%, #00ffff 66%, #000 100%); width: 100%; height: 70px;"></div>
+                <div class="filter-label">Cyber Glitch</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: Stickers -->
+          <div class="tab-pane" id="tab-stickers">
+            <div class="section-header">
+              <span>Reel Stickers & Emojis</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; font-size: 1.8rem; text-align: center;">
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '🔥', type: 'sticker', duration: 4 })">🔥</button>
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '⚡', type: 'sticker', duration: 4 })">⚡</button>
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '🚀', type: 'sticker', duration: 4 })">🚀</button>
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '💥', type: 'sticker', duration: 4 })">💥</button>
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '✨', type: 'sticker', duration: 4 })">✨</button>
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '🎬', type: 'sticker', duration: 4 })">🎬</button>
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '🎧', type: 'sticker', duration: 4 })">🎧</button>
+              <button class="tool-btn" style="padding: 10px;" onclick="window.novaCutApp.timeline.addClip('track-pip-1', { emoji: '💯', type: 'sticker', duration: 4 })">💯</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center: Video Canvas Monitor -->
+      <section class="preview-container">
+        <div class="monitor-wrapper" id="monitorWrapper">
+          <canvas id="previewCanvas"></canvas>
+        </div>
+
+        <!-- Floating Playback Bar -->
+        <div class="playback-controls">
+          <button class="icon-btn" id="skipStartBtn" onclick="window.novaCutApp.timeline.seek(0)" title="Skip to Start">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+          </button>
+          
+          <button class="play-pause-btn" id="playPauseBtn" title="Play/Pause (Space)">
+            <span id="playPauseIcon" style="font-size: 1.2rem;">▶</span>
+          </button>
+
+          <button class="icon-btn" id="stepForwardBtn" onclick="window.novaCutApp.timeline.seek(window.novaCutApp.timeline.currentTime + 1/30)" title="Step Forward 1 Frame">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+          </button>
+
+          <div class="timecode-display" id="timecodeDisplay">
+            <span class="timecode-current">00:00.00</span> / 00:15.00
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Inspector Panel -->
+      <aside class="right-inspector">
+        <div class="inspector-header">
+          <span id="inspectorSelectionTitle">Inspector & Color</span>
+        </div>
+
+        <div class="inspector-content">
+          <!-- Video / Global Filter Controls -->
+          <div id="inspectorVideoGroup" class="control-group">
+            <div class="section-header"><span>Color Grading</span></div>
+            
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Brightness</span>
+                <span class="control-value" id="filterBrightnessVal">100%</span>
+              </div>
+              <input type="range" class="slider-input" id="filterBrightness" min="0" max="200" value="100">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Contrast</span>
+                <span class="control-value" id="filterContrastVal">100%</span>
+              </div>
+              <input type="range" class="slider-input" id="filterContrast" min="0" max="200" value="100">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Saturation</span>
+                <span class="control-value" id="filterSaturationVal">100%</span>
+              </div>
+              <input type="range" class="slider-input" id="filterSaturation" min="0" max="200" value="100">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Blur</span>
+                <span class="control-value" id="filterBlurVal">0px</span>
+              </div>
+              <input type="range" class="slider-input" id="filterBlur" min="0" max="20" value="0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Hue Rotate</span>
+                <span class="control-value" id="filterHueVal">0°</span>
+              </div>
+              <input type="range" class="slider-input" id="filterHue" min="0" max="360" value="0">
+            </div>
+
+            <div class="section-header" style="margin-top: 10px;"><span>Speed & Audio</span></div>
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Playback Speed</span>
+                <span class="control-value" id="clipSpeedVal">1.0x</span>
+              </div>
+              <input type="range" class="slider-input" id="clipSpeed" min="0.2" max="3" step="0.1" value="1">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Clip Volume</span>
+                <span class="control-value" id="clipVolumeVal">100%</span>
+              </div>
+              <input type="range" class="slider-input" id="clipVolume" min="0" max="2" step="0.05" value="1">
+            </div>
+          </div>
+
+          <!-- Text Properties Group -->
+          <div id="inspectorTextGroup" class="control-group" style="display: none;">
+            <div class="section-header"><span>Text Styling</span></div>
+            <input type="text" class="text-input-field" id="textClipInput" placeholder="Enter text...">
+            
+            <div class="color-picker-row">
+              <label style="font-size: 0.8rem; flex: 1;">Text Color:</label>
+              <input type="color" class="color-swatch-input" id="textColorInput" value="#ffffff">
+            </div>
+
+            <div class="color-picker-row">
+              <label style="font-size: 0.8rem; flex: 1;">Pill Background:</label>
+              <input type="color" class="color-swatch-input" id="textBgInput" value="#8b5cf6">
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Bottom Multi-Track Timeline -->
+    <footer class="timeline-section">
+      <!-- Toolbar -->
+      <div class="timeline-toolbar">
+        <div class="timeline-tools-left">
+          <button class="tool-btn" id="splitClipBtn" title="Split Clip at Playhead (S)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line><line x1="14.47" y1="14.48" x2="20" y2="20"></line><line x1="8.12" y1="8.12" x2="12" y2="12"></line></svg>
+            Split (S)
+          </button>
+          <button class="tool-btn" id="deleteClipBtn" title="Delete Clip (Del/Backspace)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Delete
+          </button>
+          <button class="tool-btn" id="duplicateClipBtn" title="Duplicate Selected Clip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Duplicate
+          </button>
+        </div>
+
+        <div class="timeline-tools-right">
+          <div class="zoom-control">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Zoom</span>
+            <input type="range" class="slider-input" id="timelineZoomSlider" min="20" max="150" value="50" style="width: 100px;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Body -->
+      <div class="timeline-body">
+        <!-- Track Headers -->
+        <div class="track-headers">
+          <div class="track-header-ruler-spacer"></div>
+          <div class="track-header-item"><div class="track-icon-badge">💬 Text</div></div>
+          <div class="track-header-item"><div class="track-icon-badge">✨ Overlay</div></div>
+          <div class="track-header-item"><div class="track-icon-badge">🎥 Video</div></div>
+          <div class="track-header-item"><div class="track-icon-badge">🎵 Audio</div></div>
+        </div>
+
+        <!-- Track Viewport with Ruler & Clips -->
+        <div class="track-viewport" id="trackViewport">
+          <canvas class="timeline-ruler-canvas" id="rulerCanvas"></canvas>
+          <div class="tracks-container" id="tracksContainer"></div>
+          <!-- Draggable Playhead Needle -->
+          <div class="playhead-needle" id="playheadNeedle">
+            <div class="playhead-head"></div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Export Modal Dialog -->
+    <div class="modal-backdrop" id="exportModal">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">Export & Render Video</div>
+          <button class="icon-btn" id="closeExportModal" style="width: 28px; height: 28px;">✕</button>
+        </div>
+
+        <div class="control-group">
+          <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Resolution Preset</label>
+          <select id="exportResolutionSelect" class="text-input-field" style="background: var(--bg-tertiary);">
+            <option value="1080p" selected>1080p Full HD (Recommended)</option>
+            <option value="720p">720p HD (Fast)</option>
+            <option value="4k">4K Ultra HD</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Frame Rate (FPS)</label>
+          <select id="exportFpsSelect" class="text-input-field" style="background: var(--bg-tertiary);">
+            <option value="30" selected>30 FPS (Standard)</option>
+            <option value="60">60 FPS (Smooth Motion)</option>
+          </select>
+        </div>
+
+        <div id="exportProgressSection" style="display: none; flex-direction: column; gap: 8px;">
+          <div id="exportProgressText" style="font-size: 0.85rem; font-weight: 600; color: var(--accent-secondary);">Rendering...</div>
+          <div class="export-progress-bar-bg">
+            <div class="export-progress-bar-fill" id="exportProgressBar"></div>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="startExportActionBtn" style="justify-content: center; width: 100%; padding: 12px;">
+          ⚡ Render & Download Video
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Area -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
